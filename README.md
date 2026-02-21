@@ -14,8 +14,9 @@ chmod +x monad-doctor.sh
 
 ## 🛠️ What it checks:
 1. **CPU Cores:** Ensures you have 16+ physical cores.
-2. **System RAM:** Checks for 32GB+ memory.
-3. **SMT/Hyperthreading:** Verifies that logical threads are disabled to prevent context-switching lag.
-4. **CPU Governor:** Ensures the CPU is set to 'performance' mode.
-5. **Open File Limits:** Checks if `ulimit -n` is set to 1048576 for massive P2P/DB connections.
-6. **NVMe Storage:** Confirms the presence of high-IOPS NVMe drives.
+2. **CPU Clock Speed:** Checks if the processor meets the 4.5 GHz+ requirement for optimal single-thread execution.
+3. **System RAM:** Checks for 32GB+ memory.
+4. **SMT/Hyperthreading:** Verifies that logical threads are disabled to prevent context-switching lag.
+5. **CPU Governor:** Ensures the CPU is set to 'performance' mode.
+6. **Open File Limits:** Checks if `ulimit -n` is set to 1048576 for massive P2P/DB connections.
+7. **NVMe Storage:** Confirms the presence of high-IOPS NVMe drives.
