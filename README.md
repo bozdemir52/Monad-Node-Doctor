@@ -6,11 +6,11 @@ High-throughput blockchains like Monad require specific OS-level tuning (like di
 
 ## Quick Start
 Run the following command on your Monad node:
-\`\`\`bash
+```bash
 curl -sO https://raw.githubusercontent.com/bozdemir52/monad-node-doctor/main/monad-doctor.sh
 chmod +x monad-doctor.sh
 ./monad-doctor.sh
-\`\`\`
+```
 
 ## 🛠️ What it checks:
 1. **CPU Cores:** Ensures you have 16+ physical cores.
