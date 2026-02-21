@@ -19,8 +19,8 @@ TOTAL_CHECKS=8
 
 # 1. Bare Metal Check (Strict Requirement)
 echo -n -e "1. Server Type (Bare Metal): "
-VIRT=$(systemd-detect-virt 2>/dev/null || echo "unknown")
-if [ "$VIRT" == "none" ]; then
+VIRT=$(systemd-detect-virt 2>/dev/null | head -n 1)
+if [ -z "$VIRT" ] || [ "$VIRT" == "none" ]; then
     echo -e "${GREEN}PASS (Bare Metal / No Virtualization)${NC}"
     SCORE=$((SCORE+1))
 else
@@ -29,21 +29,20 @@ fi
 
 # 2. CPU Model & Base Clock Check
 echo -n -e "2. CPU Model & Base Clock: "
-CPU_MODEL=$(lscpu | grep "Model name:" | sed -e 's/Model name:[[:space:]]*//')
-# İşlemci modelinin içinde GHz yazıyorsa (Örn: @ 4.50GHz) onu bulmaya çalışır
+# Sadece ilk satırı (-m 1) alır, alt satırlardaki BIOS yazılarını engeller
+CPU_MODEL=$(lscpu | grep -m 1 "Model name:" | sed -e 's/Model name:[[:space:]]*//')
 BASE_GHZ=$(echo "$CPU_MODEL" | grep -oP '@ \K[0-9.]+(?=GHz)')
 
 if [ -n "$BASE_GHZ" ]; then
-    # Base clock 4.5 veya üstü mü kontrolü
-    if $(echo "$BASE_GHZ >= 4.5" | bc -l 2>/dev/null); then
+    CHECK_SPEED=$(echo "$BASE_GHZ >= 4.5" | bc -l 2>/dev/null)
+    if [ "$CHECK_SPEED" == "1" ]; then
         echo -e "${GREEN}PASS ($CPU_MODEL)${NC}"
         SCORE=$((SCORE+1))
     else
         echo -e "${YELLOW}WARN ($CPU_MODEL - Base clock is $BASE_GHZ GHz, 4.5+ GHz recommended)${NC}"
-        SCORE=$((SCORE+1)) # Puan kırmıyoruz ama uyarıyoruz
+        SCORE=$((SCORE+1))
     fi
 else
-    # Eğer GHz bilgisi string içinde yoksa sadece modeli yazdırır
     echo -e "${GREEN}PASS ($CPU_MODEL)${NC}"
     SCORE=$((SCORE+1))
 fi
